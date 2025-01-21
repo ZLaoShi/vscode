@@ -399,3 +399,8 @@ import './contrib/scrollLocking/browser/scrollLocking.contribution.js';
 import './contrib/inlineCompletions/browser/inlineCompletions.contribution.js';
 
 //#endregion
+
+
+// eslint-disable-next-line local/code-import-patterns
+import './contrib/example/browser/example.contribution.js';
+

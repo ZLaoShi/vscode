@@ -14,6 +14,8 @@ export class WebviewProtocolProvider extends Disposable {
 	private static validWebviewFilePaths = new Map([
 		['/index.html', 'index.html'],
 		['/fake.html', 'fake.html'],
+		['/styles.css', 'styles.css'],  // 必须添加
+		['/app.js', 'app.js'],          // 必须添加
 		['/service-worker.js', 'service-worker.js'],
 	]);
 

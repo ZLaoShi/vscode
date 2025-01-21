@@ -421,6 +421,7 @@ export interface IFileEditorFactory {
 }
 
 export interface IEditorFactoryRegistry {
+	[x: string]: any;
 
 	/**
 	 * Registers the file editor factory to use for file editors.

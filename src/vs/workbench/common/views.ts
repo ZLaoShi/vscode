@@ -34,6 +34,14 @@ export const defaultViewIcon = registerIcon('default-view-icon', Codicon.window,
 export namespace Extensions {
 	export const ViewContainersRegistry = 'workbench.registry.view.containers';
 	export const ViewsRegistry = 'workbench.registry.view';
+
+	export function InstantiationService<T>(InstantiationService: any) {
+		throw new Error('Function not implemented.');
+	}
+
+	export function EditorService<T>(EditorService: any) {
+		throw new Error('Function not implemented.');
+	}
 }
 
 export const enum ViewContainerLocation {
