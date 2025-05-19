@@ -248,13 +248,13 @@ export abstract class AbstractRuntimeExtensionsEditor extends EditorPane {
 				const msgContainer = append(desc, $('div.msg'));
 
 				const actionbar = new ActionBar(desc);
-				actionbar.onDidRun(({ error }) => error && this._notificationService.error(error));
+				const listener = actionbar.onDidRun(({ error }) => error && this._notificationService.error(error));
 
 				const timeContainer = append(element, $('.time'));
 				const activationTime = append(timeContainer, $('div.activation-time'));
 				const profileTime = append(timeContainer, $('div.profile-time'));
 
-				const disposables = [actionbar];
+				const disposables = [actionbar, listener];
 
 				return {
 					root,
@@ -422,8 +422,8 @@ export abstract class AbstractRuntimeExtensionsEditor extends EditorPane {
 							data.msgContainer.appendChild($('span', undefined, `${feature.label}: `));
 							data.msgContainer.appendChild($('span', undefined, ...renderLabelWithIcons(`$(${status.severity === Severity.Error ? errorIcon.id : warningIcon.id}) ${status.message}`)));
 						}
-						if (accessData?.totalCount > 0) {
-							const element = $('span', undefined, `${nls.localize('requests count', "{0} Requests: {1} (Overall)", feature.label, accessData.totalCount)}${accessData.current ? nls.localize('session requests count', ", {0} (Session)", accessData.current.count) : ''}`);
+						if (accessData?.accessTimes.length > 0) {
+							const element = $('span', undefined, `${nls.localize('requests count', "{0} Usage: {1} Requests", feature.label, accessData.accessTimes.length)}${accessData.current ? nls.localize('session requests count', ", {0} Requests (Session)", accessData.current.accessTimes.length) : ''}`);
 							if (accessData.current) {
 								const title = nls.localize('requests count title', "Last request was {0}.", fromNow(accessData.current.lastAccessed, true, true));
 								data.elementDisposables.push(this._hoverService.setupManagedHover(getDefaultHoverDelegate('mouse'), element, title));
@@ -447,7 +447,7 @@ export abstract class AbstractRuntimeExtensionsEditor extends EditorPane {
 			}
 		};
 
-		this._list = <WorkbenchList<IRuntimeExtension>>this._instantiationService.createInstance(WorkbenchList,
+		this._list = this._instantiationService.createInstance(WorkbenchList<IRuntimeExtension>,
 			'RuntimeExtensions',
 			parent, delegate, [renderer], {
 			multipleSelectionSupport: false,
@@ -468,7 +468,7 @@ export abstract class AbstractRuntimeExtensionsEditor extends EditorPane {
 
 		this._list.splice(0, this._list.length, this._elements || undefined);
 
-		this._list.onContextMenu((e) => {
+		this._register(this._list.onContextMenu((e) => {
 			if (!e.element) {
 				return;
 			}
@@ -504,7 +504,7 @@ export abstract class AbstractRuntimeExtensionsEditor extends EditorPane {
 				getAnchor: () => e.anchor,
 				getActions: () => actions
 			});
-		});
+		}));
 	}
 
 	public layout(dimension: Dimension): void {
